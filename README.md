@@ -33,11 +33,11 @@ make
 
 From here, you can run the executables from within the build folder:
 ```
-./lineFollower
+./lineFollower_image
 ```
 or 
 ```
-./lineFollower_live
+./lineFollower_video
  ```
 
 ## VSCode approach:
