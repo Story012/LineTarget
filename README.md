@@ -13,9 +13,9 @@ cd ~/Documents/robotics_is_life
 Download the files:
 ```
 // Grab files from github; note this will download in your current directory!
-git clone https://github.com/Story012/EML6805.git
+git clone https://github.com/Story012/LineTarget.git
 
-cd LineFollower
+cd LineTarget
 ```
 
 ## Terminal approach:
@@ -42,7 +42,7 @@ or
 
 ## VSCode approach:
 ```
-cd LineFollower
+cd LineTarget
 code .
 ```
 
