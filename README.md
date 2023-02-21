@@ -1,9 +1,9 @@
 # EML6805
 Projects for Advanced Design of Robots course
 
-# LineFollower:
+# LineTarget:
 
-There are two main executables, one for an image and one for a video file/live camera.
+There are two main executables, one for an image and one for a video file.
 
 Go to your preffered directory in a terminal, 
 ```
