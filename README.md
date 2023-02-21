@@ -13,9 +13,9 @@ cd ~/Documents/robotics_is_life
 Download the files:
 ```
 // Grab files from github; note this will download in your current directory!
-git clone https://github.com/Story012/EML6805.git
+git clone https://github.com/Story012/LineTarget.git
 
-cd LineFollower
+cd LineTarget
 ```
 
 ## Terminal approach:
@@ -33,16 +33,16 @@ make
 
 From here, you can run the executables from within the build folder:
 ```
-./lineFollower
+./lineFollower_image
 ```
 or 
 ```
-./lineFollower_live
+./lineFollower_video
  ```
 
 ## VSCode approach:
 ```
-cd LineFollower
+cd LineTarget
 code .
 ```
 
