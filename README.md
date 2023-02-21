@@ -1,5 +1,5 @@
 # EML6805
-Projects for Advanced Design of Robots course
+Project 1 for Advanced Design of Robots course
 
 # LineTarget:
 
