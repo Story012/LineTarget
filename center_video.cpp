@@ -25,34 +25,16 @@ void findCenterLine(std::vector<uchar> b, cv::Mat &image, cv::Mat &canvas, int y
     // cv::polylines(canvas, cent, false, cv::Scalar(255,255,255), 2);
     cv::circle(canvas,cent.front(),3,cv::Scalar(255,255,255),1);
     cv::circle(canvas,cent.back(),3,cv::Scalar(255,255,255),1);
-    cv::Point midpnt, midint,target; 
+    cv::Point midpnt, midint; 
     midpnt = (cent.front() + cent.back())*0.5;
     midint = static_cast<cv::Point2i>(midpnt/2);
-    // target = cv::Point(image.cols/2,y) - midint;
     cv::circle(canvas,midpnt,10,cv::Scalar(255,255,255),1);
-    cv::circle(canvas,target,10,cv::Scalar(255,0,255),1);
     cv::line(canvas,midpnt,cv::Point(image.cols/2,y),cv::Scalar(255, 255, 255),2);
-
+    cv::line(canvas,cv::Point(image.cols/2,y+10),cv::Point(image.cols/2,y-10),cv::Scalar(0, 0, 255),2);
+    cv::line(canvas,cv::Point(image.cols/2+10,y),cv::Point(image.cols/2-10,y),cv::Scalar(0, 0, 255),2);
 }
 
 int main(int argc, char** argv) {
-
-    // Create a capture object from device number (or video filename)
-    // cv::VideoCapture cap(0);
-    // // Check if any error happened
-    // if( !cap.isOpened() ) {
-    //         std::cout << "Ops, capture cannot be created!" << std::endl;
-    //         return -1;
-    // }
-
-    cv::VideoCapture cap("../line.mp4");
-    if ( !cap.isOpened() )  // isOpened() returns true if capturing has been initialized.
-    {
-        std::cout << "Cannot open the video file. \n";
-        return -1;
-    }
-
-    std::cout << "Press 'Esc' to quit..." << std::endl;
 
     //Trackbar info:
     cv::namedWindow("EML4840");
@@ -68,34 +50,38 @@ int main(int argc, char** argv) {
     bool show_blue = true;
     bool show_green = true;
     bool show_gray = true;
+    
+    // Create vectors to store the graphs
+    std::vector<uchar> r, g, b, k;
+    
+    cv::VideoCapture cap("../line.mp4");
+    if ( !cap.isOpened() )  // isOpened() returns true if capturing has been initialized.
+    {
+        std::cout << "Cannot open the video file. \n";
+        return -1;
+    }
+    // Capturing frame
+    cv::Mat image;
+    bool okay = cap.read( image );
+    // Checking format
+    std::string type = cv::typeToString( image.type() );
+    std::cout << type << std::endl
+            << image.rows << "x" << image.cols
+            << std::endl;
+    if (type != "CV_8UC3") {
+        std::cout << "Ops, format '" << type << "' not supported!" << std::endl;
+        return 1;
+    }
+
     std::cout << "Press:" << std::endl
               << "s            : to save image" << std::endl
               << "r, g, b, or k: to show colors" << std::endl
               << "q or ESC     : to quit" << std::endl;
-    // Create vectors to store the graphs
-    std::vector<uchar> r, g, b, k;
-    // Run until 'q' is pressed...
-    bool running = true;
 
+    bool running = true;
     while( true ) {
         
-        // Create a image object 
-        cv::Mat image;
-        // Capture frame
-        bool okay = cap.read( image );
-
-        std::string type = cv::typeToString( image.type() );
-        std::cout << type << std::endl
-              << image.rows << "x" << image.cols
-              << std::endl;
-        if (type != "CV_8UC3") {
-            std::cout << "Ops, format '" << type << "' not supported!" << std::endl;
-            return 1;
-        }
-        // Skip if any capture error happened (or video ended)
-        if( okay ) 
-                cv::imshow("Image", image);
-        
+        cap.read(image);
         r.clear();
         g.clear();
         b.clear();
@@ -125,31 +111,32 @@ int main(int argc, char** argv) {
         int key = cv::waitKey(10);
         switch(key) {
         case 's':
-            cv::imwrite("../output.jpg", image);
-            break;
+            cv::imwrite("../output.png", canvas);
+            continue;
         case 'q':
-            break;
+            running = false;
+            goto exit_loop;
         case KEY_ESC:
             running = false;
-            break;
+            goto exit_loop;
         case 'r':
             show_red = !show_red;
-            break;
+            continue;
         case 'g':
             show_green = !show_green;
-            break;
+            continue;
         case 'b':
             show_blue = !show_blue;
-            break;
+            continue;
         case 'k':
             show_gray = !show_gray;
-            break;
+            continue;
         }
         // Show image
         cv::resize(canvas, canvas, cv::Size(), 0.01*track_resize, 0.01*track_resize);
         cv::imshow("EML4840", canvas);
     }
-
+    exit_loop: ;
     // Close all windows
     cv::destroyAllWindows();
     return 0;
