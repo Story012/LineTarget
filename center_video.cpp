@@ -1,6 +1,7 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
 #include <vector>
+#include <string>
 
 #define KEY_ESC 27
 
@@ -32,6 +33,11 @@ void findCenterLine(std::vector<uchar> b, cv::Mat &image, cv::Mat &canvas, int y
     cv::line(canvas,midpnt,cv::Point(image.cols/2,y),cv::Scalar(255, 255, 255),2);
     cv::line(canvas,cv::Point(image.cols/2,y+10),cv::Point(image.cols/2,y-10),cv::Scalar(0, 0, 255),2);
     cv::line(canvas,cv::Point(image.cols/2+10,y),cv::Point(image.cols/2-10,y),cv::Scalar(0, 0, 255),2);
+
+    int target_error = (image.cols/2) - midpnt.x;
+    std::string err = "Error: ";
+    std::string error_txt = err + std::to_string(target_error);
+    cv::putText(canvas, error_txt,cv::Point(image.cols/2,y+30),cv::FONT_HERSHEY_PLAIN,1,cv::Scalar(255,255,255));
 }
 
 int main(int argc, char** argv) {
