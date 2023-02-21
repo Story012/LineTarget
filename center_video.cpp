@@ -45,7 +45,7 @@ int main(int argc, char** argv) {
     //         return -1;
     // }
 
-    cv::VideoCapture cap("../blue_tape.mp4");
+    cv::VideoCapture cap("../line.mp4");
     if ( !cap.isOpened() )  // isOpened() returns true if capturing has been initialized.
     {
         std::cout << "Cannot open the video file. \n";
