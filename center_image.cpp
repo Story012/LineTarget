@@ -17,6 +17,30 @@ void plotRow(cv::Mat &image, std::vector<uchar> row_colors, int y, float scale, 
     cv::polylines(image, points, false, color, 2);
 }
 
+int findCenterLine(std::vector<uchar> b, cv::Mat image, cv::Mat canvas, int y){
+    int b_thresh = 0.95*(*max_element(b.begin(), b.end()));
+    std::vector<cv::Point2i> cent;
+    for (int x = 0; x < image.cols; ++x )
+        if (b[x] > b_thresh) cent.push_back(cv::Point(x,y));
+    // cv::polylines(canvas, cent, false, cv::Scalar(255,255,255), 2);
+    cv::circle(canvas,cent.front(),3,cv::Scalar(255,255,255),1);
+    cv::circle(canvas,cent.back(),3,cv::Scalar(255,255,255),1);
+    cv::Point midpnt, midint; 
+    midpnt = (cent.front() + cent.back())*0.5;
+    midint = static_cast<cv::Point2i>(midpnt/2);
+    cv::circle(canvas,midpnt,10,cv::Scalar(255,255,255),1);
+    cv::line(canvas,midpnt,cv::Point(image.cols/2,y),cv::Scalar(255, 255, 255),2);
+    cv::line(canvas,cv::Point(image.cols/2,y+10),cv::Point(image.cols/2,y-10),cv::Scalar(0, 0, 255),2);
+    cv::line(canvas,cv::Point(image.cols/2+10,y),cv::Point(image.cols/2-10,y),cv::Scalar(0, 0, 255),2);
+
+    int target_error = (image.cols/2) - midpnt.x;
+    std::string err = "Error: ";
+    std::string error_txt = err + std::to_string(target_error);
+    cv::putText(canvas, error_txt,cv::Point(image.cols/2,y+30),cv::FONT_HERSHEY_PLAIN,1,cv::Scalar(255,255,255));
+
+    return target_error;
+}
+
 int main(int argc, char** argv) {
     // Load image from command line arguments
     std::string filename;
@@ -80,9 +104,6 @@ int main(int argc, char** argv) {
             b.push_back( pixel[0] );
             k.push_back( gray(pixel) );
         }
-
-        int b_thresh = 0.9*(*max_element(b.begin(), b.end()));
-
         // clone image and keep the orginal for processing!
         cv::Mat canvas = image.clone();
         if (show_red)   plotRow(canvas, r, y, scale, cv::Scalar(0,0,255));
@@ -95,13 +116,8 @@ int main(int argc, char** argv) {
         // int max = *max_element(b.begin(),b.end());
         // std::cout << max << std::endl;
 
-        std::vector<cv::Point2i> cent;
-        for (int x = 0; x < image.cols; ++x )
-            if (b[x] > b_thresh) cent.push_back(cv::Point(x,y));
-        cv::polylines(canvas, cent, false, cv::Scalar(255,255,255), 2);
-        cv::Point midpnt = (cent.front() + cent.back())*0.5;
-        cv::circle(canvas,midpnt,10,cv::Scalar(255,255,255),1);
-        cv::putText(canvas,"Center",midpnt,cv::FONT_HERSHEY_DUPLEX,1.0,cv::Scalar(255, 255, 255),2);
+        findCenterLine(b,image,canvas,y);
+
         
         // Menu
         int key = cv::waitKey(10);

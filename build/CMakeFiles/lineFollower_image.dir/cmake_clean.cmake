@@ -1,5 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/lineFollower_image.dir/center_image.cpp.o"
+  "CMakeFiles/lineFollower_image.dir/center_image.cpp.o.d"
   "lineFollower_image"
   "lineFollower_image.pdb"
 )

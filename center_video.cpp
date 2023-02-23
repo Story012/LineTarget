@@ -18,7 +18,7 @@ void plotRow(cv::Mat &image, std::vector<uchar> row_colors, int y, float scale, 
     cv::polylines(image, points, false, color, 2);
 }
 
-void findCenterLine(std::vector<uchar> b, cv::Mat &image, cv::Mat &canvas, int y){
+int findCenterLine(std::vector<uchar> b, cv::Mat &image, cv::Mat &canvas, int y){
     int b_thresh = 0.95*(*max_element(b.begin(), b.end()));
     std::vector<cv::Point2i> cent;
     for (int x = 0; x < image.cols; ++x )
@@ -38,6 +38,8 @@ void findCenterLine(std::vector<uchar> b, cv::Mat &image, cv::Mat &canvas, int y
     std::string err = "Error: ";
     std::string error_txt = err + std::to_string(target_error);
     cv::putText(canvas, error_txt,cv::Point(image.cols/2,y+30),cv::FONT_HERSHEY_PLAIN,1,cv::Scalar(255,255,255));
+
+    return target_error;
 }
 
 int main(int argc, char** argv) {
